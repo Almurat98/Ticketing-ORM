@@ -1,9 +1,11 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.enums.Status;
 import com.cydeo.mapper.ProjectMapper;
+import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.ProjectRepository;
 import com.cydeo.service.ProjectService;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
     ProjectMapper projectMapper;
     ProjectRepository projectRepository;
+    UserMapper userMapper;
 
-    public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository,UserMapper userMapper) {
         this.projectMapper = projectMapper;
         this.projectRepository= projectRepository;
+        this.userMapper=userMapper;
     }
 
     @Override
@@ -63,5 +67,12 @@ public class ProjectServiceImpl implements ProjectService {
         Project project= projectRepository.findByProjectCode(projectCode);
         project.setProjectStatus(Status.COMPLETE);
         projectRepository.save(project);
+    }
+
+    @Override
+    public List<ProjectDTO> getCountedListOfProjectDTO(UserDTO manager) {
+        return  projectRepository.findAllByAssignedManager(userMapper.convertToEntity(manager)).stream().map(projectMapper::convertToDTO).collect(Collectors.toList());
+
+
     }
 }
