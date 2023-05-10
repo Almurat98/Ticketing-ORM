@@ -12,7 +12,6 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "roles")
-@Where(clause = "is_deleted=false")
 public class Role extends BaseEntity {
 
     private String description;

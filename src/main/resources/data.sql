@@ -1,3 +1,4 @@
-INSERT INTO roles(description) VALUES ('Admin');
-INSERT INTO roles(description) VALUES ('Manager');
-INSERT INTO roles(description) VALUES ('Employee');
+insert into roles(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id, description)
+VALUES ('2022-01-05 00:00:00', 1, false, '2022-01-05 00:00:00', 1, 'Admin'),
+       ('2022-01-05 00:00:00', 1, false, '2022-01-05 00:00:00', 1, 'Manager'),
+       ('2022-01-05 00:00:00', 1, false, '2022-01-05 00:00:00', 1, 'Employee');
