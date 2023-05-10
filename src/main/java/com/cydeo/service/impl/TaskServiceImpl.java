@@ -13,6 +13,7 @@ import com.cydeo.service.TaskService;
 
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void update(TaskDTO dto) {
+    public TaskDTO update(TaskDTO dto) {
+        Optional<Task> task = taskRepository.findById(dto.getId());
+        Task convertedTask=  taskMapper.convertToEntity(dto);
+        convertedTask.setId(task.get().getId());
+        convertedTask.setTaskStatus(task.get().getTaskStatus());
+        convertedTask.setAssignedDate(task.get().getAssignedDate());
+        taskRepository.save(convertedTask);
+
+        return findById(dto.getId());
 
     }
 
