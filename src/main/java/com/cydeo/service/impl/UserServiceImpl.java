@@ -1,9 +1,17 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
+import com.cydeo.entity.Task;
 import com.cydeo.entity.User;
+import com.cydeo.mapper.ProjectMapper;
 import com.cydeo.mapper.UserMapper;
+import com.cydeo.repository.ProjectRepository;
+import com.cydeo.repository.TaskRepository;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.ProjectService;
+import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +24,20 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper;
+    ProjectService projectService;
+     ProjectRepository projectRepository;
+     ProjectMapper projectMapper;
+     TaskRepository taskRepository;
+     TaskService taskService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, ProjectMapper projectMapper,UserMapper userMapper, ProjectService projectService, ProjectRepository projectRepository, TaskRepository taskRepository, TaskService taskService) {
         this.userRepository = userRepository;
-        this.userMapper=userMapper;
+        this.userMapper = userMapper;
+        this.projectService = projectService;
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
+        this.taskService = taskService;
+        this.projectMapper= projectMapper;
     }
 
     @Override
@@ -49,16 +67,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteByUserName(String name) {
+        if(checkIfUserCanBeDeleted(userMapper.convertToEntity(findByUserName(name))))
         userRepository.deleteByUserName(name);
     }
 
+    private boolean checkIfUserCanBeDeleted(User user){
+        switch (user.getRole().getDescription()){
+            case "Manager":
+               List<ProjectDTO> projectDTOList = projectService.readAllByAssignedManager(user);
+                    return projectDTOList.size()==0;
+            case "Employee":
+                List<TaskDTO> taskList= taskService.readAllByAssignedEmployee(user);
+                return taskList.size()==0;
+
+            default: return true;
+        }
+    }
 
     @Override
     public void delete(String username) {
         User user = userRepository.findByUserName(username);
+        if(checkIfUserCanBeDeleted(user)){
         user.setDeleted(true);
         userRepository.save(user);
     }
+}
 
     @Override
     public List<UserDTO> findAllByROles(String role) {

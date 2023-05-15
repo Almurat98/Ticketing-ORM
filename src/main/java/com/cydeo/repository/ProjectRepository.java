@@ -1,5 +1,6 @@
 package com.cydeo.repository;
 
+import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.entity.User;

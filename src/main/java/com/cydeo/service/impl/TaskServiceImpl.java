@@ -119,7 +119,7 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Task> task= taskRepository.findById(dto.getId());
         task.get().setTaskStatus(dto.getTaskStatus());
-        update(taskMapper.convertToDTO(task.get()));
+        save(taskMapper.convertToDTO(task.get()));
 
     }
 
@@ -130,6 +130,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> readAllByAssignedEmployee(User assignedEmployee) {
-        return null;
+        return taskRepository.findAllByAssignedEmployee(assignedEmployee).stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
     }
 }
