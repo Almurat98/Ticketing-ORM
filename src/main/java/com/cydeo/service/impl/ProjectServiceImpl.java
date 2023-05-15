@@ -77,6 +77,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project= projectRepository.findByProjectCode(projectCode);
         project.setProjectStatus(Status.COMPLETE);
         projectRepository.save(project);
+
+        taskService.completeByProject(projectMapper.convertToDTO(project));
     }
 
     @Override

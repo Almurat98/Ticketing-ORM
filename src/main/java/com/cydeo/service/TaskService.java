@@ -28,4 +28,5 @@ public interface TaskService {
 
     List<TaskDTO> readAllByAssignedEmployee(User assignedEmployee);
 
+
 }

@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
         Task convertedTask=  taskMapper.convertToEntity(dto);
         if(task.isPresent()) {
             convertedTask.setId(task.get().getId());
-            convertedTask.setTaskStatus(task.get().getTaskStatus());
+            convertedTask.setTaskStatus(task.get().getTaskStatus()== null ? task.get().getTaskStatus() : dto.getTaskStatus());
             convertedTask.setAssignedDate(task.get().getAssignedDate());
             taskRepository.save(convertedTask);
         }
@@ -102,6 +102,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void completeByProject(ProjectDTO project) {
+        listAllByProject(project).forEach(taskDTO -> {
+            taskDTO.setTaskStatus(Status.COMPLETE);
+            update(taskDTO);
+        });
 
     }
 
