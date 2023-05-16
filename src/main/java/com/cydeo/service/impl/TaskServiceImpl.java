@@ -119,7 +119,7 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Task> task= taskRepository.findById(dto.getId());
         task.get().setTaskStatus(dto.getTaskStatus());
-        save(taskMapper.convertToDTO(task.get()));
+        update(taskMapper.convertToDTO(task.get()));
 
     }
 

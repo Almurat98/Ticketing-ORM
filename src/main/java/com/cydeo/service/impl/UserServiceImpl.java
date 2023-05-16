@@ -13,6 +13,7 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
      TaskRepository taskRepository;
      TaskService taskService;
 
-    public UserServiceImpl(UserRepository userRepository, ProjectMapper projectMapper,UserMapper userMapper, ProjectService projectService, ProjectRepository projectRepository, TaskRepository taskRepository, TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, ProjectMapper projectMapper, UserMapper userMapper, @Lazy ProjectService projectService, ProjectRepository projectRepository, TaskRepository taskRepository, TaskService taskService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.projectService = projectService;
