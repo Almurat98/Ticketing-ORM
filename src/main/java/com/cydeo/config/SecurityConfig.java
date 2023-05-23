@@ -18,6 +18,7 @@ public class SecurityConfig {
                         .antMatchers("/project/**","/manager/**").hasRole("MANAGER")
                         .antMatchers("/task/employee/**").hasRole("EMPLOYEE")
                         .antMatchers("/task/**").hasAuthority("ROLE_EMPLOYEE")
+                    //    .antMatchers("/task/**").hasAnyRole("EMPLOYEE","ADMIN")
                         .antMatchers(
                                 "/",
                                 "/login",
