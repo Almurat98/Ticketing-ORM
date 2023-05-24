@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
@@ -21,6 +22,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav flex-column">
                         <li class="nav-divider"></li>
+                        <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Manager')"></li>
                         <li class="nav-item">
                             <a class="nav-link active"
                                href="#"
@@ -33,10 +35,10 @@
                             </a>
                             <div id="submenu-1" class="collapse submenu" style="">
                                 <ul class="nav flex-column">
-                                    <li class="nav-item">
+                                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin')">
                                         <a class="nav-link" th:href="@{/user/create}">User Create</a>
                                     </li>
-                                    <li class="nav-item">
+                                    <li class="nav-item" sec:authorize="hasAnyAuthority('Manager')">
                                         <a class="nav-link" th:href="@{/project/create}">Project Create</a>
                                     </li>
                                 </ul>

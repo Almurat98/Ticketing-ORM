@@ -10,9 +10,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
    private final UserDetailsService securityService;
+   private final AuthSuccessHandler authSuccessHandler;
 
-    public SecurityConfig(UserDetailsService securityService) {
+    public SecurityConfig(UserDetailsService securityService,AuthSuccessHandler authSuccessHandler) {
         this.securityService = securityService;
+        this.authSuccessHandler=authSuccessHandler;
     }
 
     @Bean
@@ -21,9 +23,9 @@ public class SecurityConfig {
 
                 return http
                         .authorizeRequests()
-                        .antMatchers("/user/**").hasRole("ADMIN")
-                        .antMatchers("/project/**","/manager/**").hasRole("MANAGER")
-                        .antMatchers("/task/employee/**").hasRole("EMPLOYEE")
+                        .antMatchers("/user/**").hasAuthority("Admin")
+                        .antMatchers("/project/**","/manager/**").hasAuthority("Manager")
+                        .antMatchers("/task/employee/**").hasAuthority("Employee")
                         .antMatchers("/task/**").hasAuthority("ROLE_EMPLOYEE")
                     //    .antMatchers("/task/**").hasAnyRole("EMPLOYEE","ADMIN")
                         .antMatchers(
@@ -37,7 +39,8 @@ public class SecurityConfig {
                         .and()
                         .formLogin()
                         .loginPage("/login")
-                        .defaultSuccessUrl("/welcome")
+                        .successHandler(authSuccessHandler)
+                        //.defaultSuccessUrl("/welcome")
                         .failureUrl("/login?error=true")
                         .permitAll()
                         .and()
