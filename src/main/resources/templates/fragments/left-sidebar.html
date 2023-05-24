@@ -44,7 +44,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="hasAnyAuthority('Manager')">
                             <a class="nav-link"
                                href="#"
                                data-toggle="collapse"
@@ -66,7 +66,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="hasAnyAuthority('Employee')" >
                             <a class="nav-link"
                                href="#"
                                data-toggle="collapse"
