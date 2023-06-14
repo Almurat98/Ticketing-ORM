@@ -1,87 +1,47 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.UserDTO;
+import com.cydeo.entity.ResponseWrapper;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Controller
-@RequestMapping("/user")
+@RestController
+@RequestMapping("/api/v1/user")
 public class UserController {
 
-    RoleService roleService;
-    UserService userService;
+
+    private final RoleService roleService;
+    private final UserService userService;
 
     public UserController(RoleService roleService, UserService userService) {
         this.roleService = roleService;
         this.userService = userService;
     }
 
-    @GetMapping("/create")
-    public String createUser(Model model) {
-
-        model.addAttribute("user", new UserDTO());
-        model.addAttribute("roles", roleService.findAllRole());
-        model.addAttribute("users", userService.findAllUsers());
-
-        return "/user/create";
+    @GetMapping
+    public ResponseEntity<ResponseWrapper>getUsers(){
+        List<UserDTO>userDTOList= userService.findAllUsers();
+        return ResponseEntity.ok(new ResponseWrapper("User List successfully retrieved",userDTOList, HttpStatus.OK));
     }
 
-
-    @PostMapping("/create")
-    public String insertUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-
-            model.addAttribute("roles", roleService.findAllRole());
-            model.addAttribute("users", userService.findAllUsers());
-
-            return "/user/create";
-
-        }
-
-        userService.save(user);
-        return "redirect:/user/create";
-
+    @GetMapping("/{userName}")
+    public ResponseEntity<ResponseWrapper> getUserByUsername(@PathVariable String userName){
+        UserDTO user = userService.findByUserName(userName);
+        return ResponseEntity.ok(new ResponseWrapper("User"+userName+" successfully retrieved",user,HttpStatus.OK));
     }
 
-    @GetMapping("/update/{username}")
-    public String editUser(@PathVariable("username") String username, Model model) {
-
-        model.addAttribute("user", userService.findByUserName(username));
-        model.addAttribute("roles", roleService.findAllRole());
-        model.addAttribute("users", userService.findAllUsers());
-
-        return "/user/update";
-
+    @PostMapping
+    public ResponseEntity<ResponseWrapper>createUser(@RequestBody UserDTO userDTO){
+        userService.save(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("User created",HttpStatus.CREATED));
     }
-
-    @PostMapping("/update")
-    public String updateUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-
-            model.addAttribute("roles", roleService.findAllRole());
-            model.addAttribute("users", userService.findAllUsers());
-
-            return "/user/update";
-
-        }
-
-        userService.update(user);
-        return "redirect:/user/create";
-
-    }
-
-    @GetMapping("/delete/{username}")
-    public String deleteUser(@PathVariable("username") String username) {
-        userService.deleteByUserName(username);
-        return "redirect:/user/create";
-    }
-
 }
