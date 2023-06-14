@@ -44,4 +44,16 @@ public class UserController {
         userService.save(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("User created",HttpStatus.CREATED));
     }
+
+    @PutMapping
+    public ResponseEntity<ResponseWrapper>updateUser(@RequestBody UserDTO userDTO){
+        userService.update(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("User created",HttpStatus.CREATED));
+    }
+
+    @DeleteMapping("/{userName}")
+    public ResponseEntity<ResponseWrapper>deleteUserByUsername(@PathVariable String userName){
+        userService.deleteByUserName(userName);
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseWrapper("user deleted",HttpStatus.NO_CONTENT));
+    }
 }
